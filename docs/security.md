@@ -55,8 +55,10 @@ checks. Never suppress a real secret simply to get a green build. Read the
   or disaster-recovery design. Kubernetes YAML demonstrates declarative workload
   configuration, not a completed cloud platform.
 - The Zarf package is validated on a local k3d cluster, with images served only
-  from the in-cluster registry. The package is unsigned, creating it needs
-  internet access, and it has not been tested on a disconnected network.
+  from the in-cluster registry. CI proves with throwaway keys that unsigned,
+  wrong-key, and tampered packages are rejected (`make sign-validate`), but no
+  signed release has been published yet. Creating the package needs internet
+  access, and it has not been tested on a disconnected network.
 - UDS Core integration is validated on the local slim dev bundle (Istio and the
   UDS Operator). On UDS Core, the client is authorized by its ServiceAccount
   identity over mTLS as well as by NetworkPolicy. Keycloak SSO, monitoring,
