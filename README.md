@@ -160,3 +160,7 @@ The next steps build on the same small service instead of adding unrelated tools
 | 5. Evaluate cloud IaC | A minimal Terraform AWS environment with a cost/cleanup plan | Reviewed plan, tested apply/destroy, and documented access boundaries |
 
 [Zarf](https://docs.zarf.dev/) packages software and its dependencies for disconnected delivery. [UDS separates delivery from platform integration](https://docs.defenseunicorns.com/core/v1-13/concepts/configuration--packaging/overview/): the UDS Operator reconciles application requirements from custom resources. A [UDS bundle](https://docs.defenseunicorns.com/core/v1-13/concepts/configuration--packaging/bundles/) groups versioned Zarf packages and environment configuration. The [Zarf package](deploy/zarf/) and the [UDS `Package` CR and bundle](deploy/uds/) are implemented and validated locally.
+
+## License
+
+[MIT](LICENSE)
