@@ -1,8 +1,8 @@
 """Generate a throwaway cosign key pair with `zarf tools gen-key`.
 
 `gen-key` only reads its password from a terminal, so this runs it on a
-pseudo-terminal, answers the terminal's cursor-position query, and submits an
-empty password. The files cosign.key and cosign.pub are written to the current
+pseudo-terminal, answers the terminal's cursor-position queries, and submits an
+empty password once the prompt is idle. The files cosign.key and cosign.pub are written to the current
 directory. They are test material for scripts/sign-validate.sh and must never
 sign a real release.
 
@@ -18,6 +18,7 @@ import time
 TIMEOUT_SECONDS = 30
 CURSOR_QUERY = b"\x1b[6n"
 CURSOR_REPLY = b"\x1b[1;1R"
+MAX_ANSWERS = 5
 
 zarf = sys.argv[1] if len(sys.argv) > 1 else "zarf"
 pid, fd = pty.fork()
@@ -25,6 +26,7 @@ if pid == 0:
     os.execvp(zarf, [zarf, "tools", "gen-key", "--no-color"])
 
 deadline = time.time() + TIMEOUT_SECONDS
+prompted = False
 answers = 0
 finished = False
 while time.time() < deadline:
@@ -33,6 +35,12 @@ while time.time() < deadline:
         if os.waitpid(pid, os.WNOHANG)[0]:
             finished = True
             break
+        # The prompt is idle and waiting for input. Answering only now keeps
+        # the Enter key from being swallowed together with a cursor reply,
+        # which is what happens on Linux if both are written back to back.
+        if prompted and answers < MAX_ANSWERS:
+            os.write(fd, b"\r")
+            answers += 1
         continue
     try:
         data = os.read(fd, 4096)
@@ -42,9 +50,8 @@ while time.time() < deadline:
         break
     for _ in range(data.count(CURSOR_QUERY)):
         os.write(fd, CURSOR_REPLY)
-    if b"assword" in data and answers < 3:
-        os.write(fd, b"\r")
-        answers += 1
+    if b"assword" in data:
+        prompted = True
 
 if not finished:
     try:
