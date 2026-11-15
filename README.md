@@ -16,7 +16,7 @@
 - **Signature verification:** `make sign-validate` signs the package and fails unless an unsigned package, a wrong key, a package modified after signing, and an unsigned deployment are all rejected. It runs in CI on every pull request.
 - **Next milestone:** the first tagged release from the [release workflow](.github/workflows/release.yml), which signs the image and package keylessly.
 
-**Scope:** this is a learning portfolio. The application, checks, container configuration, and Kubernetes manifests are implemented, and the Kubernetes runtime behavior is validated on k3d: directly and from a Zarf package in CI on every pull request, and on UDS Core locally. Artifact signing and AWS/Terraform provisioning are future work. No production, compliance, or disconnected-network deployment is claimed. Use the linked [Actions runs](https://github.com/km-hernandez/airgap-exploration/actions) to inspect the current validation results.
+**Scope:** this is a learning portfolio. The application, checks, container configuration, and Kubernetes manifests are implemented, and the Kubernetes runtime behavior is validated on k3d: directly and from a Zarf package in CI on every pull request, and on UDS Core locally. Package signature verification is validated in CI with throwaway keys; the first keylessly signed release and AWS/Terraform provisioning are future work. No production, compliance, or disconnected-network deployment is claimed. Use the linked [Actions runs](https://github.com/km-hernandez/airgap-exploration/actions) to inspect the current validation results.
 
 ## Architecture
 
